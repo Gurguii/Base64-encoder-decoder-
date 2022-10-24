@@ -23,7 +23,8 @@ Clone the repository locally
 ```bash
   python3 b64.py -d "aGVsbG8gd29ybGShoQ=="
 ```
-![image](https://gyazo.com/676405463d46b5b38bdd1ee14246840a)
+![imagen](https://user-images.githubusercontent.com/101645735/197558673-6a342812-b772-47d3-b882-849f7d316697.png)
+
 
 - Encoding file
 ```bash
@@ -33,4 +34,6 @@ Clone the repository locally
 ```bash
   python3 b64 -d encoded -o decoded
 ```
-![image](https://gyazo.com/bb7b4a1bdaecf1a9ca3706d91e673f00)
+
+![imagen](https://user-images.githubusercontent.com/101645735/197558318-1bd48c70-c243-4295-9043-2e710c1a67c5.png)
+
