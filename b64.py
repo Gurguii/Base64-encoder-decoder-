@@ -107,13 +107,7 @@ def encodeFile():
     if padding!=4:
         result+="="*padding
 
-    fixedResult = ""
-
-    while len(result)!=0:
-        fixedResult+=result[:76]+'\r\n'
-        result=result[76:]
-
-    print(fixedResult)
+    print(result)
 
 
 def decodeFile():

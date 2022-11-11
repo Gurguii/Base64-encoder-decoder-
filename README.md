@@ -1,39 +1,40 @@
-
-# Base64 encoder/decoder
-
-
-
-## Download
-
-Clone the repository locally  
+# Base64 encoder/decoder [C++ & Python]  
+Allows encoding/decoding a given file/string in Base64.  
+*Note: I'm thinking on better code for big files, but I'm not sure if it's gonna work since I'm not implementing bitwise operators, discovered them too late so i decided to go for it this way since I'm gonna practise optimizing, pointers, etc anyway*
+# Setup  
+- Clone repository
 ```bash
-  sudo git clone https://github.com/Gurguii/Base64-encoder-decoder-
-```
-## Usage
-```bash
-  python3 b64.py -e|-d <string/file> -o* <outputFile>
-```
-## Testing
+sudo git clone https://github.com/Gurguii/Base64-encoder-decoder-
+```  
 
-- Encoding string
+- Get into project directory  
 ```bash
-  python3 b64.py -e "hello world¡¡"
-```
-- Decoding string
+cd Base64-encoder-decoder-
+```  
+- Compile C++ program  
 ```bash
-  python3 b64.py -d "aGVsbG8gd29ybGShoQ=="
-```
-![imagen](https://user-images.githubusercontent.com/101645735/197558673-6a342812-b772-47d3-b882-849f7d316697.png)
+g++ b64.cpp -o base -Wno-multichar
+```   
+*Note: C++ is faster*
+# Usage  
+**C++**
+```base64
+./base -d* <string/file>
+```  
+**Python**
+```bash
+python3 b64.py -d* <string/file>
+```  
 
+The **-d** option means **decode** and It's optional (*)  
+- In order to save the result to a file redirect the output:  
 
-- Encoding file
 ```bash
-  python3 b64 -e hello -o encoded
-```
-- Decoding file
+./base "HelloWorld!" > encoded.txt
+```  
 ```bash
-  python3 b64 -d encoded -o decoded
-```
-
-![imagen](https://user-images.githubusercontent.com/101645735/197558318-1bd48c70-c243-4295-9043-2e710c1a67c5.png)
+./base encoded.txt > decoded.txt
+```  
+## Dev(xd)notes(problems)
+Both programs work with the base64 tool installed in most systems but if you decode with the original tool a file encoded with mine, even tho It will decode and create a complete usable file, it will print an 'invalid input' error. I've been testing a few things using **wc** tool but when I've gotten to same amount of chars by adding '\n' it still shows 'invalid input' so I might be missing something really dummy. 
 

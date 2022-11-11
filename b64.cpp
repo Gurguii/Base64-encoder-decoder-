@@ -1,3 +1,12 @@
+/*
+    ############################
+    #  BASE64 ENCODER/DECODER  #
+######################################
+# Author: Gurgui                     #
+# Github: https://github.com/Gurguii #
+######################################
+
+*/
 #include <iostream>
 #include <string>
 #include <vector>
