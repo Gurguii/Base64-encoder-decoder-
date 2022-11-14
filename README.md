@@ -33,7 +33,7 @@ The **-d** option means **decode** and It's optional (*)
 ./base "HelloWorld!" > encoded.txt
 ```  
 ```bash
-./base encoded.txt > decoded.txt
+./base -d encoded.txt > decoded.txt
 ```  
 ## Dev(xd)notes(problems)
 Both programs work with the base64 tool installed in most systems but if you decode with the original tool a file encoded with mine, even tho It will decode and create a complete usable file, it will print an 'invalid input' error. I've been testing a few things using **wc** tool but when I've gotten to same amount of chars by adding '\n' it still shows 'invalid input' so I might be missing something really dummy. 
