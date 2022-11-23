@@ -5,7 +5,6 @@
 # Author: Gurgui                     #
 # Github: https://github.com/Gurguii #
 ######################################
-
 */
 #include <iostream>
 #include <string>
@@ -15,8 +14,8 @@
 #include <filesystem>
 #include <map>
 #include <cmath>
+namespace fs = std::filesystem;
 
-/* Required variables */
 int encode = 1;
 
 int ascii_table_chars[] = {' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', 'DEL', '¡', '¢', '£', '¤', '¥', '¦', '§', '¨', '©', 'ª', '«', '¬', '®', '¯', '°', '±', '²', '³', '´', 'µ', '¶', '·', '¸', '¹', 'º', '»', '¼', '½', '¾', '¿', 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', '×', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'Þ', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', '÷', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'þ', 'ÿ'};
@@ -26,7 +25,6 @@ std::string ascii_table_codes[] = {"00100000", "00100001", "00100010", "00100011
 std::string base64_table_codes[] = {"000000", "000001", "000010", "000011", "000100", "000101", "000110", "000111", "001000", "001001", "001010", "001011", "001100", "001101", "001110", "001111", "010000", "010001", "010010", "010011", "010100", "010101", "010110", "010111", "011000", "011001", "011010", "011011", "011100", "011101", "011110", "011111", "100000", "100001", "100010", "100011", "100100", "100101", "100110", "100111", "101000", "101001", "101010", "101011", "101100", "101101", "101110", "101111", "110000", "110001", "110010", "110011", "110100", "110101", "110110", "110111", "111000", "111001", "111010", "111011", "111100", "111101", "111110", "111111"};
 char base64_table_chars[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
 
-/* Displays helpful info such as options or usage */
 void help()
 {
     std::cout << "Base64 encoder/decoder\n";
@@ -34,7 +32,6 @@ void help()
     std::cout << "Options:\n-d - decode mode\n-h - display this message and exit";
 }
 
-/* Converts decimal to byte representation(8 bits) */
 std::string decToBinary(int n)
 {
     std::string binary = "";
@@ -48,7 +45,6 @@ std::string decToBinary(int n)
     return binary;
 }
 
-/* Converts binary to decimal */
 int binToDec(int bin)
 {
    int n = 0, dec = 0;
@@ -63,38 +59,32 @@ int binToDec(int bin)
 
 void encodeString(std::string *data)
 {   
-    /* Initialize variables */
-    std::map<std::string,char> base64Table;
     std::map<int,std::string> asciiTable;
 
-    std::stringstream *bits = new std::stringstream;
-    std::string bit6(6,'\0');
-    std::string result = "";
-
-    /* Create base64Table */
-    for(int i = 0 ; i < 64 ; i++)
-    {
-        base64Table.insert(std::pair<std::string,char>(base64_table_codes[i],base64_table_chars[i]));
-    }
-
-    /* Create asciiTable */
     for(int i = 0 ; i < 190 ; i++)
     {
-        asciiTable.insert(std::pair<int,std::string>(ascii_table_chars[i],ascii_table_codes[i]));
+        asciiTable.emplace(std::pair<int,std::string>(ascii_table_chars[i],ascii_table_codes[i]));
     }
 
-    /* Get bits */
+    std::stringstream *bits = new std::stringstream;
+
     for(char c : *data)
     {
         *bits << asciiTable[c];
     }
-   
+
+    std::map<std::string,char> base64Table;
+    for(int i = 0 ; i < 64 ; i++)
+    {
+        base64Table.emplace(std::pair<std::string,char>(base64_table_codes[i],base64_table_chars[i]));
+    }
+
+    std::string bit6(6,'\0');
     while(bits->read(&bit6[0],bit6.size()))
     {
-        result+=base64Table[bit6];
+        std::cout << base64Table[bit6];
     }
     
-    /* Calculate last byte and padding */
     int pad = data->size()*8/6;
     if(int ext = data->size()*8%6)
     {
@@ -104,191 +94,139 @@ void encodeString(std::string *data)
         {
             bit6+="0";
         }
-        result+=base64Table[bit6];
+        std::cout << base64Table[bit6];
     }
+
     pad = 4-(pad%4);
     if(pad < 4 && pad > 0)
     {
         for(int i = 0 ; i < pad ; i++)
         {
-            result+="=";
+            std::cout << "=";
         }
     }
-    /* Print result */
-    std::cout << result;
 }
 
 void decodeString(std::string *data)
 {
-    /* Initialize variables */
-    std::string result = "";
     std::stringstream *bits = new std::stringstream;
-    std::string bit8(8,'\0');
-
-    /* Create base64/ascii maps */
-    std::map<char,std::string> base64Table;
+    
     std::map<std::string,int> asciiTable;
-
-    /* Fill base64 map */
-    for(int i = 0 ; i < 64 ; i++ )
-    {
-        base64Table.insert(std::pair<char,std::string>(base64_table_chars[i],base64_table_codes[i]));
-    }
-
-    /* Fill ascii map */
     for(int i = 0 ; i < 190 ; i++)
     {
         asciiTable.insert(std::pair<std::string,int>(ascii_table_codes[i],ascii_table_chars[i]));
     }
 
-    /* Storage bits from b64 table conversion */
-    for(char c : *data)
+    std::map<char,std::string> base64Table;
+    for(int i = 0 ; i < 64 ; i++ )
+    {
+        base64Table.insert(std::pair<char,std::string>(base64_table_chars[i],base64_table_codes[i]));
+    }
+
+    for(char &c : *data)
     {
         *bits << base64Table[c];
     }
 
-    /* Read bits variable byte by byte and add ascii representation to the result */
-    while(bits->read(&bit8[0],bit8.size()))
-    {
-        result+=asciiTable[bit8];
-    }
+    std::string bit8(8,'\0');
 
-    /* Print result */
-    std::cout << result << std::endl;
+    while(bits->read(&bit8[0],8))
+    {
+        std::cout << (char)asciiTable[bit8];
+    }
 }
 
-void encodeFile(std::ifstream *file)
+void encodeFile(std::string &filename)
 {
-	/* Create b64 map */
+    size_t len = fs::file_size(fs::path(filename));
+    
+    if(len == 0)
+    {
+        std::cout << "[!] - File " << filename << " is empty";
+        exit(0);
+    }
+
+    std::vector<char> buffer(len);
+
+    std::ifstream(filename,std::ios::binary).read(&buffer[0],len);
+
+    std::stringstream *bits = new std::stringstream;
+
+    for(char &c : buffer)
+    {   
+        *bits << decToBinary(c);       
+    }
+
     std::map<std::string,char>table;
 
- 	/* Fill the b64 map */
     for (int i = 0 ; i < 64 ; i++)
     {
         table.insert(std::pair<std::string,char>(base64_table_codes[i],base64_table_chars[i]));
     }
 
-	/* Create buffer to store file data */
-    std::vector<char> *buffer = new std::vector<char>;
-
-	/* Calculate file size */
-    file->seekg(0,file->end);
-    size_t len = file->tellg();
-    file->seekg(0,file->beg);
-
-	/* If file is not empty, resize our buffer to file size and read data into it */
-    if(len > 0)
-    {
-        buffer->resize(len);
-        file->read(&buffer->at(0),len);
-    }
-
-	/* Create stringstream bits to store bits */
-    std::stringstream *bits = new std::stringstream;
-
-	/* Iterate through each byte and store its binary representation */
-    for(int byte : *buffer)
-    {   
-        *bits << decToBinary(byte);       
-    }
-    
-    std::string result;
     std::string bit6(6,'\0');
 
-    /* Read 6 by 6 chars from bits' stringstream and add b64 representation to result*/
     while(bits->read(&bit6[0],bit6.size()))
     {
-        result+=table[bit6];
+        std::cout << table[bit6];
     }
 	
-    int pad = buffer->size()*8/6;
+    int pad = len*8/6;
 
-    /* Add last byte if required */
-    if (int ext = buffer->size()*8%6)
+    if (int ext = len*8%6)
     {
         pad+=1;
         bit6.erase(ext);
         for(int i = 0 ; i < ext ; i++)
-        {
+        { 
             bit6+="0";
         }
-        result+=table[bit6];
+        std::cout << table[bit6];
     }
-
-    /* Add padding */
+ 
     pad = 4-(pad%4);
     if (pad < 4 && pad > 0)
     {
         for(int i = 0 ; i < pad ; i++)
         {
-            result+="=";
+            std::cout << "=";
         }   
     }
-	
-	/* Print result */
-    std::cout << result;
-
-	/* Delete unused pointers */
-	delete buffer;
 	delete bits;
 }
 
-void decodeFile(std::ifstream *file)
+void decodeFile(std::string &filename)
 {
-	/* Create b64 map */
+    size_t len = fs::file_size(fs::path(filename));
+
+    if(len == 0)
+    {
+        std::cout << "[!] - File " << filename << " is empty";
+        exit(0);
+    }
+
     std::map<char,std::string> table;
 
-	/* Fill b64 map */
     for(int i = 0 ; i < 64 ; i++)
     {
         table.insert(std::pair<char,std::string>(base64_table_chars[i],base64_table_codes[i]));
     }
 	
-	/* Create buffer to store file data */
-    std::vector<char> *buffer = new std::vector<char>;
+    std::vector<char> buffer(len);
+    std::ifstream(filename).read(&buffer[0],len);
 
-	/* Get file size */
-    file->seekg(0,file->end);
-    size_t len = file->tellg();
-    file->seekg(0,file->beg);
-    
-	/* If file is not empty, resize our buffer to file size and read data into it */
-    if(len > 0)
-    {
-        buffer->resize(len);
-        file->read(&buffer->at(0),len);
-        file->close();
-    }
-
-	/* Create stringstream bits to store bits */
     std::stringstream *bits = new std::stringstream;
-
-	/* Iterate through each byte and store its base64 6bit representation */
-    for(char c: *buffer)
+    
+    for(char &c: buffer)
     {
         *bits << table[c];
     }
-	
-	/* Create vector to store bytes */
-	std::vector<char> *data = new std::vector<char>;
-    std::string bit8(8,'\0');
 
-	/* Read byte by byte */
+    std::string bit8(8,'\0');
     while(bits->read(&bit8[0],bit8.size()))
     {
-        data->push_back(binToDec(std::stoi(bit8)));
+        std::cout << (char)(binToDec(stoi(bit8)));
     }
-    
-	/* Print result */
-    for(char c : *data)
-    {
-        std::cout << c;
-    }
-
-	/* Delete unused pointers */
-	delete buffer;
-	delete bits;
-	delete data;
 }
 
 int main(int argc, char **argv)
@@ -300,9 +238,9 @@ int main(int argc, char **argv)
     }
     std::string data = argv[argc-1];
     
-    /*Parse arguments*/
     std::stringstream *args = new std::stringstream;
     std::string *opt = new std::string;
+
     for(int i = 1 ; i < argc ; i++)
     {
         *args << argv[i] << ' ';
@@ -323,19 +261,13 @@ int main(int argc, char **argv)
     delete args;
     delete opt;
 
-    /*Check if inputted data source is a file*/
-    std::filesystem::path file(data);
-    if(std::filesystem::is_regular_file(file))
+
+    if(fs::is_regular_file(fs::path(data)))
     {
-        std::ifstream filestream(file,std::ios::binary);
-        if (filestream.good())
-        {
-            encode ? encodeFile(&filestream) : decodeFile(&filestream);
-            exit(0);
-        }
+        encode ? encodeFile(data) : decodeFile(data);
+        exit(0);
     }
 
-    /*Check if inputted data is a printable string*/
     for(char c : data)
     {
         if(!isprint(c))
@@ -346,7 +278,6 @@ int main(int argc, char **argv)
         }
     }
 
-    /*At this point we know it's a string so we check encode variable status and call encode/decode*/
     encode ? encodeString(&data) : decodeString(&data);
     return 0;
 }
