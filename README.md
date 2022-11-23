@@ -1,6 +1,5 @@
 # Base64 encoder/decoder [C++ & Python]  
-Allows encoding/decoding a given file/string in Base64.  
-*Note: I'm thinking on better code for big files, but I'm not sure if it's gonna work since I'm not implementing bitwise operators, discovered them too late so i decided to go for it this way since I'm gonna practise optimizing, pointers, etc anyway*
+Allows encoding/decoding a given file/string using Base64 concept. Not reccomended as a substitute of base64 tool installed in most systems by default.
 # Setup  
 - Clone repository
 ```bash
@@ -35,6 +34,6 @@ The **-d** option means **decode** and It's optional (*)
 ```bash
 ./base -d encoded.txt > decoded.txt
 ```  
-## Dev(xd)notes(problems)
-Both programs work with the base64 tool installed in most systems but if you decode with the original tool a file encoded with mine, even tho It will decode and create a complete usable file, it will print an 'invalid input' error. I've been testing a few things using **wc** tool but when I've gotten to same amount of chars by adding '\n' it still shows 'invalid input' so I might be missing something really dummy. 
+## Dev notes
+Both programs work themselves but got some incompatibilities with base64 tool since I don't add any LF (Unix) or CRLF (Windows).  On one hand my encode is slightly lighter due to the absence of '\n' and '\r\n'. On the other hand it performs slower than base64 tool, more noticeable with bigger sizes.
 
