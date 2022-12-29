@@ -1,4 +1,6 @@
-# [C++] - Base64 encoder/decoder  
+# [C++] - Base64 encoder/decoder 
+b64C++20.cpp => requires -std=c++20 option when compiling since it uses std::span to parse args.  
+b64.cpp (reccomended) => doesn't use <span> header and does the same
 
 ## Description  
 Program that allows base64 encoding and decoding text/file.  
@@ -13,9 +15,9 @@ cd Base64-encoder-decoder-
 ```  
 Compile  
 ```bash
-g++ -std=c++20 <file_chosen> -o <executable_name>
+g++ -std=C++20 <desiredfile.cpp> -o <executable_name>
 ```  
-Note: When using base64C++20 '-std=C++20' is required, when using base64C++17 '-std=C++17' is required.
+Note: If you're using b64.cpp as your input file, you don't need to add '-std=C++20' when compiling but you can leave it. If your input file is b64C++.cpp then you need to add it.  
 ## Encoding
 
 ```bash
