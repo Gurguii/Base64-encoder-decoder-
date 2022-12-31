@@ -12,10 +12,11 @@ Get into the project directory
 cd Base64-encoder-decoder-
 ```  
 Compile  
+
+Compiling C++20 version(just change both 20 depending on the file you want to compile)
 ```bash
-g++ -std=c++20 <file_chosen> -o <executable_name>
+g++ -std=c++20 base64_C++20.cpp -o <executable_name_you_desire>
 ```  
-Note: When using base64C++20 '-std=C++20' is required, when using base64C++17 '-std=C++17' is required.
 ## Encoding
 
 ```bash
