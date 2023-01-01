@@ -1,10 +1,9 @@
 #include <string>
-#include <cstddef>
 #include <vector>
 #include <fstream>
 
-typedef std::string str;
-typedef std::vector<uint8_t> vector_uint8t;
+using str = std::string;
+using vector_uint8t = std::vector<uint8_t>;
 
 str b64_table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 

@@ -1,14 +1,13 @@
 #include <string>
-#include <cstddef>
 #include <vector>
 #include <fstream>
 
-typedef std::string str;
-typedef std::vector<uint8_t> vector_uint8t;
+using str = std::string;
+using vector_uint8t = std::vector<uint8_t>;
 
 str b64_table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-int ISFILE(str filename){
+inline int ISFILE(str filename){
     return std::ifstream(filename).good();
 };
 
@@ -126,9 +125,9 @@ int main(int argc, const char *args[])
         }
         else
         {   
-            std::vector<uint8_t> buffer(FILE_SIZE(data));
+            vector_uint8t buffer(FILE_SIZE(data));
             std::ifstream(data,std::ios::binary).read(reinterpret_cast<char*>(buffer.data()), buffer.size());
-            b64_encode<std::vector<uint8_t>>(buffer);
+            b64_encode<vector_uint8t>(buffer);
         }
     }
     else

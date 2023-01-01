@@ -1,12 +1,14 @@
 #include <string>
-#include <cstddef>
 #include <vector>
 #include <filesystem>
 #include <fstream>
 #include <span>
 
-typedef std::string str;
-typedef std::vector<uint8_t> vector_uint8t;
+using str = std::string;
+using vector_uint8t = std::vector<uint8_t>;
+
+namespace fs = std::filesystem;
+
 str b64_table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 constexpr auto ISFILE = [](auto filename){return std::filesystem::is_regular_file(filename);};
@@ -27,7 +29,7 @@ template<typename T> void b64_encode(T data)
    
     for(int i = 0, j = 0 ; j < iters ; i+=3, j++)
     {
-        bits = ((data[i] << 16)) | ((data[i+1] << 8)) | (data[i+2]);
+        bits = ((int(data[i])<< 16)) | ((int(data[i+1]) << 8)) | (int(data[i+2]));
 
         printf("%c%c%c%c",  b64_table[(bits >> 18) & 0x3f],
                             b64_table[(bits >> 12) & 0x3f],
@@ -40,12 +42,12 @@ template<typename T> void b64_encode(T data)
     {
         if(rest == 1)
         {        
-            uint16_t bits = data[iters*3] << 4;
+            uint16_t bits = int(data[iters*3]) << 4;
             printf("%c%c==",  b64_table[(bits >> 6) & 0x3f],
                               b64_table[(bits >> 0) & 0x3f]);
         }
         else{
-            uint32_t bits = (data[iters*3] << 10) | (data[iters*3+1] << 2);
+            uint32_t bits = (int(data[iters*3]) << 10) | (int(data[iters*3+1]) << 2);
             printf("%c%c%c=",   b64_table[(bits >> 12) & 0x3f],
                                 b64_table[(bits >> 6) & 0x3f],
                                 b64_table[(bits >> 0) & 0x3f]);
@@ -60,7 +62,7 @@ template <typename T> void b64_decode(T data)
 
     for(int i = 0, j = 0; j < iters-1; i+=4, j++)
     {
-        bits = (b64_table.find(data[i]) << 18) | (b64_table.find(data[i+1]) << 12) | (b64_table.find(data[i+2]) << 6) | (b64_table.find(data[i+3]));
+        bits = (b64_table.find(int(data[i]))<< 18) | (b64_table.find(int(data[i+1])) << 12) | (b64_table.find(int(data[i+2])) << 6) | (b64_table.find(int(data[i+3])));
         printf("%c%c%c", ((bits >> 16) & 0xff),
                         ((bits >> 8) & 0xff),
                         ((bits >> 0) & 0xff)); 
@@ -111,14 +113,14 @@ int main(int argc, const char *args[])
         if(decode)
         {
             str buffer(std::filesystem::file_size(data), '\x00');
-            std::ifstream(data, std::ios::in).read(&buffer[0], buffer.size());
+            std::ifstream(data).read(&buffer[0], buffer.size());
             b64_decode<str>(buffer);
         }
         else
         {   
-            std::vector<uint8_t> buffer(std::filesystem::file_size(data));
+            std::vector<std::byte> buffer(std::filesystem::file_size(data));
             std::ifstream(data,std::ios::binary).read(reinterpret_cast<char*>(buffer.data()), buffer.size());
-            b64_encode<std::vector<uint8_t>>(buffer);
+            b64_encode<std::vector<std::byte>>(buffer);
         }
     }
     else
