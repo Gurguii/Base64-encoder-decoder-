@@ -20,7 +20,7 @@ int COUNT(str data, char ch){
 
 namespace base64
 {
-    std::string encode(std::string_view data)
+    template <typename T> std::string encode(T data)
     {
         int iters = data.size()/3;
         uint32_t bits;
@@ -51,10 +51,10 @@ namespace base64
                 result+='=';
             }
         }
-        return result;
+        return std::move(result);
     }
 
-    std::string decode(std::string_view data)
+    template <typename T> std::string decode(T data)
     {   
         int iters = data.size()/4;
         uint32_t bits;
@@ -83,14 +83,14 @@ namespace base64
                 result+=((bits >> 8) & 0xff);
                 result+=((bits >> 0) & 0xff);            
             }
-            return result;
+            return std::move(result);
         }
 
         bits = (b64_table.find(last4[0]) << 18) | (b64_table.find(last4[1]) << 12) | (b64_table.find(last4[2]) << 6) | (b64_table.find(last4[3]));
         result+=((bits >> 16) & 0xff);
         result+=((bits >> 8) & 0xff);
         result+=((bits >> 0) & 0xff);
-        return result;
+        return std::move(result);
     }
 }
 #endif
