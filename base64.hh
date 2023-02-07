@@ -51,12 +51,17 @@ namespace base64
                 result+='=';
             }
         }
-        return std::move(result);
+        return result;
     }
 
-    template <typename T> std::string decode(T data)
+    template <typename T> std::string decode(T data,uint8_t force = 0)
     {   
-        int iters = data.size()/4;
+        if(!force && data.size()%4 != 0){
+            fprintf(stderr,"[!] - Wrong input size, if you still want to decode,\n"
+                "make sure that you pass an 1 -> base64::decode(mydata,1)\n");
+            return "";
+        }
+        int iters = data.size()/4;  
         uint32_t bits;
         std::string result;
         for(int i = 0, j = 0; j < iters-1; i+=4, j++)
@@ -83,14 +88,14 @@ namespace base64
                 result+=((bits >> 8) & 0xff);
                 result+=((bits >> 0) & 0xff);            
             }
-            return std::move(result);
+            return result;
         }
 
         bits = (b64_table.find(last4[0]) << 18) | (b64_table.find(last4[1]) << 12) | (b64_table.find(last4[2]) << 6) | (b64_table.find(last4[3]));
         result+=((bits >> 16) & 0xff);
         result+=((bits >> 8) & 0xff);
         result+=((bits >> 0) & 0xff);
-        return std::move(result);
+        return result;
     }
 }
 #endif
