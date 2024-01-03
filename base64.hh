@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 using str = std::string;
 using vector_uint8t = std::vector<uint8_t>;
